@@ -130,7 +130,9 @@ class advMockController extends baseController {
     findRepeatParams = {
       project_id: data.project_id,
       interface_id: data.interface_id,
-      ip_enable: data.ip_enable
+      ip_enable: data.ip_enable,
+      // 添加一个name的检查条件，即可添加相同入参期望名称不同的Mock
+      name: data.name
     };
 
     if (data.params && typeof data.params === 'object' && Object.keys(data.params).length > 0) {
