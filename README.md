@@ -1,3 +1,73 @@
+## YApi-自由Mock
+
+#### 为了方便使用，同时也是我们的需求：定义多个入参相同出参不同的Mock，通过开启和关闭Mock来控制
+
+修改 yapi/vendors/exts/yapi-plugin-advanced-mock/controller.js
+
+```javascript
+findRepeatParams = {
+      project_id: data.project_id,
+      interface_id: data.interface_id,
+      ip_enable: data.ip_enable,
+      // 添加一个name的检查条件，允许添加相同入参期望名称不同的Mock
+      name: data.name 
+ };
+```
+
+
+
+#### 为了方便部署，添加Docker支持
+
+修改config-yapi.json内容为自己的数据库和其他配置
+
+dokcer一键运行
+
+```bash
+docker-compose  up -d
+```
+
+或者修改docker-compose.yml
+
+```yaml
+version: "3.9"
+services:
+  # mariadb 数据库
+  mariadb:
+    image: mariadb:10.2
+    container_name: mariadb
+    restart: always
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: yourpassword
+      MARIADB_DATABASE: "trojan"
+    networks:
+      - net
+
+  # yapi
+  yapi:
+    # image: ahuinee/yapi
+    build: .
+    container_name: yapi
+    restart: always
+    volumes:
+      - ./yapi_data/config.json:/yapi/config.json
+    depends_on:
+      - mongodb
+    ports:
+      - 3000:3000
+    networks:
+      - net
+
+networks:
+  net:
+
+```
+
+
+
 ## YApi  可视化接口管理平台
 
 体验地址：
@@ -37,7 +107,7 @@ YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大
 
     npm install -g yapi-cli --registry https://registry.npm.taobao.org
     yapi server 
-    
+
 #### 服务管理
 利用pm2方便服务管理维护。
 
@@ -55,7 +125,7 @@ YApi 是<strong>高效</strong>、<strong>易用</strong>、<strong>功能强大
     yapi ls //查看版本号列表
     yapi update //更新到最新版本
     yapi update -v {Version} //更新到指定版本
-    
+
 ### 教程
 * [使用 YApi 管理 API 文档，测试， mock](https://juejin.im/post/5acc879f6fb9a028c42e8822)
 * [自动更新 Swagger 接口数据到 YApi 平台](https://juejin.im/post/5af500e251882567096140dd)
