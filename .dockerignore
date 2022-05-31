@@ -1,0 +1,6 @@
+*.DS_Store
+.git
+.github
+package-lock.json
+node_modules
+npm-debug.log

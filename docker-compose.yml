@@ -1,0 +1,7 @@
+version: '3.9'
+services:
+  yapi:
+    build: .
+    container_name: yapi
+    ports:
+      - 3000:3000
